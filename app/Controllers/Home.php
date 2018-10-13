@@ -1,14 +1,32 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flavius
- * Date: 02.10.2018
- * Time: 08:25
- */
 
-class Home
+namespace app\Controllers;
+
+use Core\Controller;
+use Core\View;
+
+class Home extends Controller
 {
-    public function index(){
-        echo "Hello from Home/index";
+    public function indexAction(){
+        View::render('Home/index.php', [
+            'name' => 'Dave',
+            'colors' => ['red', 'green', 'blue']
+        ]);
+    }
+
+    /**Before filter
+     * @return void
+     */
+    protected function before()
+    {
+
+    }
+
+    /**After filter
+     * @return void
+     */
+    protected function after()
+    {
+
     }
 }

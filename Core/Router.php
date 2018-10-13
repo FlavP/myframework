@@ -1,5 +1,7 @@
 <?php
 
+namespace Core;
+
 class Router
 {
 
@@ -25,9 +27,9 @@ class Router
      */
 
     public function add($route, $params = []){
-        // Convert the route to a regular expression: scape forward slashes
+        // Convert the route to a regular expression: escape forward slashes
         // Cauti slash (/) in $route si le inlocuiesti cu (\) pentru a putea crea subgrupuri
-        // De expresii regulate, astfel incat fiecare componenta a url-uluo, delimitat de (/)
+        // De expresii regulate, astfel incat fiecare componenta a url-ului, delimitat de (/)
         // Sa devina un subgrup (variabila) de expresii regulate
         $route = preg_replace('/\//', '\\/',$route);
 
@@ -110,17 +112,19 @@ class Router
         if($this->match($url)){
             $controller = $this->parameters['controller'];
             $controller = $this->convertToStudlyCaps($controller);
+//            $controller = "app\Controllers\\$controller";
+            $controller = $this->getNamespace() . $controller;
 
             if(class_exists($controller)){
-                $controller_object = new $controller();
+                $controllerObject = new $controller($this->parameters);
 
                 $action = $this->parameters['action'];
                 $action = $this->convertToCamelCase($action);
 
-                if(is_callable([$controller_object, $action])){
-                    $controller_object->$action();
+                if(preg_match('/action$/i', $action) == 0){
+                    $controllerObject->$action();
                 } else {
-                    echo "Method $action (in controller $controller) not found.";
+                    throw new \Exception("Method $action in controller $controller cannot be called directly - remove the Action suffix to call this method");
                 }
             } else {
                 echo "Controller class $controller not found.";
@@ -171,5 +175,21 @@ class Router
             }
         }
         return $url;
+    }
+
+    /**
+     * Get the namespace for the controller class. The namespace defined in the
+     * route parameters is added if present.
+     *
+     * @return string The request URL
+     */
+    protected function getNamespace(){
+        $namespace = 'app\Controllers\\';
+
+        if(array_key_exists('namespace', $this->parameters)){
+            $namespace .= $this->parameters['namespace'] . '\\';
+        }
+
+        return $namespace;
     }
 }
