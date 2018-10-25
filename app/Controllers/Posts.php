@@ -1,6 +1,7 @@
 <?php
 namespace app\Controllers;
 
+use app\Models\Post;
 use Core\Controller;
 use \Core\View;
 
@@ -18,7 +19,8 @@ class Posts extends Controller
     public function indexAction(){
 //        echo "Hello from the index action in the Posts controller!";
 //        echo '<p> string parameters: <pre>' . htmlspecialchars(print_r($_GET, true)) . '</pre></p>';
-        View::renderTemplate('Posts/index.html.twig', []);
+        $posts = Post::getAll();
+        View::renderTemplate('Posts/index.html.twig', ['posts' => $posts]);
     }
 
     /**
