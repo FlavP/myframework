@@ -16,18 +16,23 @@
 //require '../app/Controllers/Home.php';
 //require '../Core/Router.php';
 
+/**
+ * Composer
+ */
+require '../vendor/autoload.php';
+
 
 /**
  * Autoloader
  */
 
-spl_autoload_register(function ($class){
-    $root = dirname(__DIR__); //get the parent directory
-    $file = $root . '/' . str_replace('\\', '/', $class) . '.php';
-    if(is_readable($file)){
-        require $root . '/' . str_replace('\\', '/', $class) . '.php';
-    }
-});
+//spl_autoload_register(function ($class){
+//    $root = dirname(__DIR__); //get the parent directory
+//    $file = $root . '/' . str_replace('\\', '/', $class) . '.php';
+//    if(is_readable($file)){
+//        require $root . '/' . str_replace('\\', '/', $class) . '.php';
+//    }
+//});
 
 $router = new Core\Router();
 //echo get_class($router);
